@@ -19,11 +19,11 @@ on:
       DEVICE_TREE:
         description: 'Custom Recovery Tree'
         required: true
-        default: 'https://github.com/lazycodebuilder/recovery_rmx1851'
+        default: 'https://github.com/whitefx27/hotdogb_twrp.git'
       DEVICE_TREE_BRANCH:
         description: 'Custom Recovery Tree Branch'
         required: true
-        default: 'android-14_ofrp'
+        default: 'fox-12.1'
       BUILD_TARGET:
         description: 'Specify your Build Target'
         required: true
@@ -46,7 +46,7 @@ on:
 jobs:
   build:
     name: Build OFRP by ${{ github.actor }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     if: github.event.repository.owner.id == github.event.sender.id
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
