@@ -9,7 +9,6 @@ on:
         default: '14.1'
         type: choice
         options:
-        - 14.1
         - 12.1
         - 11.0
         - 10.0
@@ -87,7 +86,7 @@ jobs:
         git config --global user.name "lazycodebuilder"
         git config --global user.email "154446636+lazycodebuilder@users.noreply.github.com"
         git clone https://gitlab.com/OrangeFox/sync.git
-        if [ ${{ inputs.MANIFEST_BRANCH }} == '11.0' ] || [ ${{ inputs.MANIFEST_BRANCH }} == '12.1' ] || [ ${{ inputs.MANIFEST_BRANCH }} == '14.1' ]; then
+        if [ ${{ inputs.MANIFEST_BRANCH }} == '11.0' ] || [ ${{ inputs.MANIFEST_BRANCH }} == '12.1' ]; then
             echo "Sync fox_${{ inputs.MANIFEST_BRANCH }} branch"
             echo "CHECK_LEGACY_BRANCH=false" >> $GITHUB_ENV
             cd sync
