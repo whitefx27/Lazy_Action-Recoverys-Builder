@@ -101,6 +101,32 @@ jobs:
     - name: Clone Device Tree
       run: |
         cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ inputs.MANIFEST_BRANCH }}
+        # 1. Find potential .clang-tidy files
+        find . -name ".clang-tidy" -print0 | while IFS= read -r -d $'\0' file; do
+         echo "Found .clang-tidy file: $file"
+        done
+
+        # 2. Check if the exclusion already exists (to avoid duplicates)
+        find . -name ".clang-tidy" -exec grep -q "google-build-using-namespace" {} \; -print0 | while IFS= read -r -d $'\0' file; do
+         echo "Exclusion already exists in: $file"
+        done
+
+        # 3. Add the exclusion to .clang-tidy files (only if it doesn't already exist)
+        find . -name ".clang-tidy" -print0 | while IFS= read -r -d $'\0' file; do
+         if ! grep -q "google-build-using-namespace" "$file"; then
+          echo "Adding exclusion to: $file"
+          sed -i '$a\    - google-build-using-namespace' "$file"
+          # Add a comment to help identify the change
+          sed -i '$a\    # Ignore google-build-using-namespace warning' "$file"
+         else
+          echo "Exclusion already exists in $file. Skipping."
+         fi
+        done
+
+        # 4. Verify changes (optional)
+        find . -name ".clang-tidy" -exec grep "google-build-using-namespace" {} \;
+
+        echo "Finished adding .clang-tidy exclusions."
         git clone ${{ inputs.DEVICE_TREE }} -b ${{ inputs.DEVICE_TREE_BRANCH }} ./device_tree
         cd device_tree
         echo "COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
